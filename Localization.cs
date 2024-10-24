@@ -30,6 +30,13 @@ public class Localization
                 }
             ),
             new LocalizationSentence(
+                "mod_uim_cancel_no_money",
+                new Dictionary<ModLanguage, string>() {
+                    {ModLanguage.English, "Forget it, next time. I didn't bring enough money."},
+                    {ModLanguage.Chinese, "算了，下次吧。我钱没带够。"}
+                }
+            ),
+            new LocalizationSentence(
                 "mod_uim_exchange_confirm",
                 new Dictionary<ModLanguage, string>() {
                     {ModLanguage.English, "Are you sure you want to sell this stuff?"},

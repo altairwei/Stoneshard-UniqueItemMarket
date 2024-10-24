@@ -10,7 +10,7 @@ public class UniqueItemMarket : Mod
 {
     public override string Author => "Altair";
     public override string Name => "Unique Item Market";
-    public override string Description => "mod_description";
+    public override string Description => "You can entrust your precious unique weaponry to Skinflint Homs in exchange for other weaponry from bandits, occultists, or mercenaries.";
     public override string Version => "1.0.0";
     public override string TargetVersion => "0.8.2.10";
 
@@ -23,6 +23,7 @@ public class UniqueItemMarket : Mod
         Msl.AddFunction(ModFiles.GetCode("scr_mod_uim_no_item_exchanging.gml"), "scr_mod_uim_no_item_exchanging");
         Msl.AddFunction(ModFiles.GetCode("scr_mod_uim_finish_exchange.gml"), "scr_mod_uim_finish_exchange");
         Msl.AddFunction(ModFiles.GetCode("scr_mod_uim_cancel_exchange.gml"), "scr_mod_uim_cancel_exchange");
+        Msl.AddFunction(ModFiles.GetCode("scr_mod_uim_accept_exchange.gml"), "scr_mod_uim_accept_exchange");
 
         Msl.LoadGML("gml_Object_o_npc_Fence_Create_0")
             .MatchFrom(@"scr_npc_dialogue_init(""Fence"")")
