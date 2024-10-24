@@ -81,7 +81,7 @@ public class Localization
             new LocalizationSentence(
                 "mod_uim_exchange_intro",
                 new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, ""},
+                    {ModLanguage.English, "Good. I'll take note of your needs. Come back to me in a day. #You know, it's a dangerous business. I'm going to be dealing with bandits, occultists and mercenaries, all of whom are insane. Of course, I'm not talking about you. #So I'm gonna need some time to make this exchange happen, and I'm gonna charge you a hefty fee."},
                     {ModLanguage.Chinese, "很好，你的需求我记下了，一天后再来找我。#你知道，这是一个很危险的生意。我要去与强盗、密教徒和雇佣兵打交道，这些人都是疯子。当然，我不是在说你。#所以我需要一些时间来促成这次交换，而且我要收你一笔不菲的手续费。"}
                 }
             ),           
