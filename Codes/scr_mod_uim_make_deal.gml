@@ -17,6 +17,4 @@ function scr_mod_uim_make_deal()
         var _timestamp = scr_timeGetTimestamp()
         scr_npc_set_global_info("uniqueItemExchangeCD", _timestamp)
     }
-
-    scr_close_dialog()
 }

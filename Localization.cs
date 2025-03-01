@@ -7,6 +7,86 @@ public class Localization
 {
     public static void DialogLinesPatching()
     {
+        List<(string, string, string)> tupleList = new List<(string, string, string)>
+        {
+            ("Radiant_Sword",           "Radiant Sword",            "光辉纹剑"),
+            ("Jarl_Blade",              "Jarl Blade",               "亚尔剑"),
+            ("Royal_Blade",             "Royal Blade",              "皇家配剑"),
+            ("Theurgist_Blade",         "Theurgist Blade",          "圣宗剑"),
+            ("Guardsman_Broadsword",    "Guardsman Broadsword",     "护卫刀"),
+            ("Ancient_Scimitar",        "Ancient Scimitar",         "古代弯刀"),
+            ("Decorated_Saber",         "Ornate Saber",             "铭纹马刀"),
+            ("Exquisite_Tabar",         "Exquisite Tabar",          "精致塔巴斧"),
+            ("Gilded_Axe",              "Gilded Axe",               "镀金斧"),
+            ("Baron_Axe",               "Baron Axe",                "男爵手斧"),
+            ("Voivod_Mace",             "Voivod Mace",              "沃伊沃德钉头锤"),
+            ("Decorated_Flanged_Mace",  "Ornate Flanged Mace",      "饰纹凸缘钉头锤"),
+            ("Decorated_Warhammer",     "Ornate Warhammer",         "鎏金战锤"),
+            ("Ceremonial_Dagger",       "Ceremonial Dagger",        "仪礼匕首"),
+            ("Ducal_Dagger",            "Ducal Dagger",             "公爵匕首"),
+            ("Ornate_Longsword",        "Ornate Longsword",         "饰纹长剑"),
+            ("Blademaster_Greatsword",  "Blademaster Greatsword",   "剑客大剑"),
+            ("Exquisite_Twohander",     "Exquisite Two-Hander",     "精致双手剑"),
+            ("Espadon",                 "Espadon",                  "耶斯巴顿"),
+            ("Faceless_Spear",          "Spear of the Faceless",    "无面矛"),
+            ("Decorated_Voulge",        "Ornate Voulge",            "鎏金弗日"),
+            ("Ornate_Longaxe",          "Exquisite Longaxe",        "华纹长斧"),
+            ("Exquisite_Grandmace",     "Exquisite Polemace",       "鎏金长柄锤"),
+            ("Ornate_Polehammer",       "Honorary Polehammer",      "嘉奖长柄锤"),
+            ("Gilded_Polehammer",       "Ornate Polehammer",        "精致长柄锤"),
+            ("Decorated_Longbow",       "Carved Longbow",           "雕纹长弓"),
+            ("Relict_Longbow",          "Relict Longbow",           "遗古长弓"),
+            ("Ornate_Crossbow",         "Carved Crossbow",          "雕纹弩"),
+            ("Guardsman_Crossbow",      "Guardsman Crossbow",       "护卫弩"),
+            ("Farseer_Staff",           "Farseer Staff",            "先见长杖"),
+            ("Axonian_Warstaff",        "Axonian Warstaff",         "亚克逊战杖"),
+            ("Hermit_Staff",            "Hermit Staff",             "隐士长杖"),
+            ("Vampiric_Staff",          "Vampiric Staff",           "吸血长杖"),
+            ("Orient_Staff",            "Orient Staff",             "东方长杖"),
+            ("Uroboros_Shield",         "Brotherhood of Ouroboros' Shield",     "衔尾蛇兄弟会盾"),
+            ("Joust_Shield",            "Jousting Shield",          "长枪比武盾"),
+            ("Sun_Shield",              "Shield of the Truth's Eternal Sun",    "真理永恒之日盾"),
+            ("Guardian_Shield",         "Guardsman Shield",         "护卫大盾"),
+            ("Orient_Tower_Shield",     "Orient Tower Shield",      "东方巨盾"),
+            ("Decorated_Barbute",       "Ornate Barbute",           "华美巴布特盔"),
+            ("Luxurious_Sallet",        "Luxurious Sallet",         "豪华夏雷尔"),
+            ("Ceremonial_Sentinet",     "Ceremonial Sentinet",      "仪礼森提亚盔"),
+            ("Vagabond_Knight_Sentinet",    "Vagabond Knight's Sentinet",       "流浪骑士森提亚盔"),
+            ("Radiant_Topfhelm",        "Radiant Topfhelm",         "光辉桶盔"),
+            ("Hermit_Circlet",          "Hermit Wreath",            "隐士头箍"),
+            ("Hermit_Garment",          "Hermit Garment",           "隐士衣服"),
+            ("Royal_Ranger_Gambeson",   "Royal Ranger Gambeson",    "皇苑守卫夹棉软铠"),
+            ("Ceremonial_Armor",        "Ceremonial Armor",         "盛装盔甲"),
+            ("Vagabond_Knight_Armor",   "Vagabond Knight's Armor",  "流浪骑士盔甲"),
+            ("Sardar_Boots",            "Sardar Boots",             "萨达尔靴"),
+            ("Engraved_Boots",          "Engraved Greaves",         "纹金胫甲"),
+            ("Hermit_Ring",             "Hermit Ring",              "隐士戒指"),
+            ("Warding_Hand_Amulet",     "Warding Hand Amulet",      "手掌护身符"),
+            ("Occult_Cloak",            "Occult Cloak",             "玄秘斗篷")
+        };
+
+        LocalizationSentence[] sentences = tupleList
+            .Select(t => new LocalizationSentence(
+                "mod_uim_" + t.Item1,
+                new Dictionary<ModLanguage, string>() {
+                    {ModLanguage.English, t.Item2},
+                    {ModLanguage.Chinese, t.Item3}
+                }))
+            .ToArray();
+
+        Msl.InjectTableDialogLocalization(sentences);
+
+        sentences = tupleList
+            .Select(t => new LocalizationSentence(
+                "mod_uim_target_" + t.Item1,
+                new Dictionary<ModLanguage, string>() {
+                    {ModLanguage.English, t.Item2},
+                    {ModLanguage.Chinese, t.Item3}
+                }))
+            .ToArray();
+
+        Msl.InjectTableDialogLocalization(sentences);
+
         Msl.InjectTableDialogLocalization(
             new LocalizationSentence(
                 "mod_uim_exchange_pc",
@@ -23,7 +103,21 @@ public class Localization
                 }
             ),
             new LocalizationSentence(
-                "mod_uim_cancel",
+                "mod_uim_cancel_1",
+                new Dictionary<ModLanguage, string>() {
+                    {ModLanguage.English, "Forget it, next time."},
+                    {ModLanguage.Chinese, "算了，下次吧。"}
+                }
+            ),
+            new LocalizationSentence(
+                "mod_uim_cancel_2",
+                new Dictionary<ModLanguage, string>() {
+                    {ModLanguage.English, "Forget it, next time."},
+                    {ModLanguage.Chinese, "算了，下次吧。"}
+                }
+            ),
+            new LocalizationSentence(
+                "mod_uim_cancel_3",
                 new Dictionary<ModLanguage, string>() {
                     {ModLanguage.English, "Forget it, next time."},
                     {ModLanguage.Chinese, "算了，下次吧。"}
@@ -52,6 +146,13 @@ public class Localization
             ),
             new LocalizationSentence(
                 "mod_uim_exchange_change_one",
+                new Dictionary<ModLanguage, string>() {
+                    {ModLanguage.English, "I changed my mind."},
+                    {ModLanguage.Chinese, "我改主意了。"}
+                }
+            ),
+            new LocalizationSentence(
+                "mod_uim_exchange_change_one_2",
                 new Dictionary<ModLanguage, string>() {
                     {ModLanguage.English, "I changed my mind."},
                     {ModLanguage.Chinese, "我改主意了。"}
@@ -113,265 +214,11 @@ public class Localization
                     {ModLanguage.Chinese, "真是太棒了！"}
                 }
             ),
-
-            // Unique Items
             new LocalizationSentence(
-                "mod_uim_Jarl_Blade",
+                "mod_uim_exchange_next_time_pc",
                 new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Jarl Blade."},
-                    {ModLanguage.Chinese, "亚尔剑。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Royal_Sword",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Royal Sword."},
-                    {ModLanguage.Chinese, "皇家配剑。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Relict_Blade",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Relict Blade."},
-                    {ModLanguage.Chinese, "古剑。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Guard_Broadsword",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Guardsman Broadsword."},
-                    {ModLanguage.Chinese, "护卫刀。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Decorated_Saber",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Ornate Saber."},
-                    {ModLanguage.Chinese, "铭纹马刀。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Ancient_Scimitar",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Ancient Scimitar."},
-                    {ModLanguage.Chinese, "古代弯刀。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Gilded_Axe",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Gilded Axe."},
-                    {ModLanguage.Chinese, "镀金手斧。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Feudal_Axe",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Lordly Axe."},
-                    {ModLanguage.Chinese, "领主手斧。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Decorated_Flanged_Mace",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Ornate Flanged Mac."},
-                    {ModLanguage.Chinese, "饰纹凸缘钉头锤。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Decorated_Warhammer",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Ornate Warhammer."},
-                    {ModLanguage.Chinese, "鎏金战锤。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Ornate_Greatsword",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Ornate Two-Hander."},
-                    {ModLanguage.Chinese, "饰纹双手剑。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Espadon",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Espadon."},
-                    {ModLanguage.Chinese, "耶斯巴顿。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Faceless_Spear",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Spear of the Faceless."},
-                    {ModLanguage.Chinese, "无面矛。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Decorated_Voulge",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Ornate Voulge."},
-                    {ModLanguage.Chinese, "鎏金弗日。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Ornate_Longaxe",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Exquisite Longaxe."},
-                    {ModLanguage.Chinese, "华纹长斧。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Exquisite_Grandmace",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Exquisite Polemace."},
-                    {ModLanguage.Chinese, "鎏金长柄锤。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Relict_Polehammer",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Relict Hammer."},
-                    {ModLanguage.Chinese, "古钉头锤。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Decorated_Longbow",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Carved Longbow."},
-                    {ModLanguage.Chinese, "雕纹长弓。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Relic_Bow",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Relict Bow."},
-                    {ModLanguage.Chinese, "古弓。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Guard_Crossbow",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Guardsman Crossbow."},
-                    {ModLanguage.Chinese, "护卫弩。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Orient_Staff",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Orient Staff."},
-                    {ModLanguage.Chinese, "东方长杖。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Relict_Staff",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Relict Staff."},
-                    {ModLanguage.Chinese, "古杖。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Guardian_Shield",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Guardsman Shield."},
-                    {ModLanguage.Chinese, "护卫大盾。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Sun_Shield",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Shield of the Truth's Eternal Sun."},
-                    {ModLanguage.Chinese, "真理永恒之日盾。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Uroboros_Shield",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Brotherhood of Ouroboros' Shield."},
-                    {ModLanguage.Chinese, "衔尾蛇兄弟会盾。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Engraved_Boots",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Engraved Greaves."},
-                    {ModLanguage.Chinese, "纹金胫甲。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Decorated_Barbute",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Ornate Barbute."},
-                    {ModLanguage.Chinese, "华美巴布特盔。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Joust_Bascinet",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Jousting Bascinet."},
-                    {ModLanguage.Chinese, "长枪比武头盔。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Joust_Topfhelm",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Jousting Topfhelm."},
-                    {ModLanguage.Chinese, "长枪比武桶盔。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Pigfaced_Bascinet",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Pig-Faced Bascinet."},
-                    {ModLanguage.Chinese, "猪面盔。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Decorated_Sallet",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Ornate Sallet."},
-                    {ModLanguage.Chinese, "饰纹轻盔。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Mastercrafted_Sallet",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Mastercrafted Sallet."},
-                    {ModLanguage.Chinese, "精锻轻盔。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Royal_Ranger_Gambeson",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Royal Ranger Gambeson."},
-                    {ModLanguage.Chinese, "皇苑守卫夹棉软铠。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Ceremonial_Cuirass",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Ceremonial Cuirass."},
-                    {ModLanguage.Chinese, "盛装胸甲。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Vagabond_Knight_Armor",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Vagabond Knight's Armor."},
-                    {ModLanguage.Chinese, "流浪骑士盔甲。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Druid_Robe",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Hermit Garment."},
-                    {ModLanguage.Chinese, "隐士上衣。"}
-                }
-            ),
-            new LocalizationSentence(
-                "mod_uim_Hermit_Ring",
-                new Dictionary<ModLanguage, string>() {
-                    {ModLanguage.English, "Hermit Ring."},
-                    {ModLanguage.Chinese, "隐士戒指。"}
+                    {ModLanguage.English, "Wait a minute. I've got other things to do."},
+                    {ModLanguage.Chinese, "先不急，我有其他事找你。"}
                 }
             )
         );

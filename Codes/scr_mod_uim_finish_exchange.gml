@@ -12,6 +12,4 @@ function scr_mod_uim_finish_exchange()
         ds_map_delete(data, "target_for_exchange")
         scr_npc_set_global_info("uniqueItemExchangeCD", 0)
     }
-
-    scr_close_dialog()
 }
