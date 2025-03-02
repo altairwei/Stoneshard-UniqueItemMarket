@@ -9,6 +9,9 @@ using System.Linq;
 
 using ModShardLauncher;
 using ModShardLauncher.Mods;
+using ModShardLauncher.Extensions;
+
+using UndertaleModLib;
 using UndertaleModLib.Models;
 
 namespace UniqueItemMarket;
@@ -22,7 +25,40 @@ public class UniqueItemMarket : Mod
 
     public override void PatchMod()
     {
-        Msl.AddFunction(ModFiles.GetCode("scr_mod_uim_is_exchange_done.gml"), "scr_mod_uim_is_exchange_done.gml");
+        string[] items = {
+            // Weapon
+            "Radiant Sword",        "Jarl Blade",                   "Royal Blade",          "Theurgist Blade",      "Guardsman Broadsword",
+            "Ancient Scimitar",     "Decorated Saber",              "Exquisite Tabar",      "Gilded Axe",           "Baron Axe",
+            "Voivod Mace",          "Decorated Flanged Mace",       "Decorated Warhammer",  "Ceremonial Dagger",    "Ducal Dagger",
+            "Ornate Longsword",     "Blademaster Greatsword",       "Exquisite Twohander",  "Espadon",              "Faceless Spear",
+            /*"Radiant Spear",      "Castellier Spear",*/           "Decorated Voulge",     "Ornate Longaxe",       "Exquisite Grandmace",
+            "Ornate Polehammer",    "Gilded Polehammer",        /*"Ordermarshal Flail",*/   "Decorated Longbow",    "Relict Longbow",
+            "Ornate Crossbow",      /*"Royal Huntmaster Crossbow",*/"Guardsman Crossbow",   /*"Ornate Sling",*/     "Farseer Staff",
+            "Axonian Warstaff",     /*"Mage General Warstaff",      "Stargazer Warstaff",*/ "Hermit Staff",         "Vampiric Staff",
+            "Orient Staff",
+            // Armor & Jewelry
+            "Uroboros Shield",      "Joust Shield",     "Sun Shield",               "Guardian Shield",          "Orient Tower Shield",
+            "Decorated Barbute",    "Luxurious Sallet", "Ceremonial Sentinet",      "Vagabond Knight Sentinet", "Radiant Topfhelm",
+            "Hermit Circlet",       "Hermit Garment",   "Royal Ranger Gambeson",    "Ceremonial Armor",         "Vagabond Knight Armor",
+            /*"Antique Wristbands",*/   "Sardar Boots",     "Engraved Boots",           "Hermit Ring",              "Warding Hand Amulet",
+            "Occult Cloak"
+        };
+
+        foreach (string it in items)
+        {
+            string funcname_1 = "scr_mod_uim_item_exists_" + it.Replace(" ", "_");
+            Msl.AddFunction(
+                name: funcname_1,
+                codeAsString: $"function {funcname_1}() {{ return scr_instance_exists_item(\"{it}\") }}"
+            );
+            string funcname_2 = "scr_mod_uim_check_available_" + it.Replace(" ", "_");
+            Msl.AddFunction(
+                name: funcname_2,
+                codeAsString: $"function {funcname_2}() {{ return ds_list_find_index(scr_atr(\"specialItemsPool\"), \"{it}\") == -1 }}"
+            );
+        }
+
+        Msl.AddFunction(ModFiles.GetCode("scr_mod_uim_is_exchange_done.gml"), "scr_mod_uim_is_exchange_done");
         Msl.AddFunction(ModFiles.GetCode("scr_mod_uim_check_available.gml"), "scr_mod_uim_check_available");
         Msl.AddFunction(ModFiles.GetCode("scr_mod_uim_item_exists.gml"), "scr_mod_uim_item_exists");
         Msl.AddFunction(ModFiles.GetCode("scr_mod_uim_give_item.gml"), "scr_mod_uim_give_item");
@@ -31,14 +67,17 @@ public class UniqueItemMarket : Mod
         Msl.AddFunction(ModFiles.GetCode("scr_mod_uim_no_item_exchanging.gml"), "scr_mod_uim_no_item_exchanging");
         Msl.AddFunction(ModFiles.GetCode("scr_mod_uim_finish_exchange.gml"), "scr_mod_uim_finish_exchange");
         Msl.AddFunction(ModFiles.GetCode("scr_mod_uim_cancel_exchange.gml"), "scr_mod_uim_cancel_exchange");
-        Msl.AddFunction(ModFiles.GetCode("scr_mod_uim_accept_exchange.gml"), "scr_mod_uim_accept_exchange");
+        Msl.AddFunction(ModFiles.GetCode("scr_mod_uim_has_discount.gml"), "scr_mod_uim_has_discount");
+        Msl.AddFunction(ModFiles.GetCode("scr_mod_uim_check_money.gml"), "scr_mod_uim_check_money");
         Msl.AddFunction(ModFiles.GetCode("UpdateFenceDialogData.gml"), "UpdateFenceDialogData");
 
+        /*
         Msl.LoadAssemblyAsString("gml_GlobalScript_DialogueSystem")
             .MatchFromUntil("> gml_Script_fragment_eval_embedded_instruction (locals=2, argc=1)", "pushloc.v local._embed_name")
             .InsertBelow(@"pop.v.v global.mod_uim_current_embed_name
 pushloc.v local._embed_name")
             .Save();
+        */
 
         UndertaleGameObject ob = Msl.AddObject("unique_item_market_initializer", isPersistent: true);
         Msl.AddNewEvent(ob, ModFiles.GetCode("UpdateFenceDialogData.gml"), EventType.Create, 0);

@@ -33,7 +33,7 @@ for (var i = 0; i < array_length(_unique_items); i++)
     var _key = "mod_uim_" + string_replace_all(_item, " ", "_")
     array_push(_Fragments.mod_uim_exchange, _key)
     variable_struct_set(_Fragments, _key, "instruction_INS_giveItem")
-    variable_struct_set(_Scripts, "embedded_" + _key, asset_get_index("scr_mod_uim_item_exists"))
+    variable_struct_set(_Scripts, "embedded_" + _key, asset_get_index("scr_mod_uim_item_exists_" + string_replace_all(_item, " ", "_")))
 }
 
 array_push(_Fragments.mod_uim_exchange, "mod_uim_cancel_1")
@@ -59,7 +59,7 @@ for (var i = 0; i < array_length(_unique_items); i++)
     var _key = "mod_uim_target_" + string_replace_all(_item, " ", "_")
     array_push(_Fragments.mod_uim_exchange_target, _key)
     variable_struct_set(_Fragments, _key, "instruction_INS_exchangeItem")
-    variable_struct_set(_Scripts, "embedded_" + _key, asset_get_index("scr_mod_uim_check_available"))
+    variable_struct_set(_Scripts, "embedded_" + _key, asset_get_index("scr_mod_uim_check_available_" + string_replace_all(_item, " ", "_")))
 }
 
 array_push(_Fragments.mod_uim_exchange_target, "mod_uim_cancel_2")
@@ -74,9 +74,11 @@ _Fragments.mod_uim_exchange_target_confirm = ["mod_uim_exchange_target_confirm_p
 _Fragments.mod_uim_exchange_target_confirm_pc = "mod_uim_exchange_intro"
 _Fragments.mod_uim_exchange_change_one_2 = "mod_uim_exchange_target"
 
-_Fragments.mod_uim_exchange_intro = ["mod_uim_exchange_accept_1", "mod_uim_exchange_accept_2", "mod_uim_cancel_no_money"]
-_Scripts.embedded_mod_uim_exchange_accept_1 = asset_get_index("scr_mod_uim_accept_exchange")
-_Scripts.embedded_mod_uim_exchange_accept_2 = asset_get_index("scr_mod_uim_accept_exchange")
+_Fragments.mod_uim_exchange_intro = ["instruction_INS_checkMoney", "mod_uim_cancel_no_money"]
+_Fragments.instruction_INS_checkMoney = "condition_CND_uimDiscount"
+_Scripts.instruction_INS_checkMoney = asset_get_index("scr_mod_uim_check_money")
+_Fragments.condition_CND_uimDiscount = ["mod_uim_exchange_accept_2", "mod_uim_exchange_accept_1"]
+_Scripts.condition_CND_uimDiscount = asset_get_index("scr_mod_uim_has_discount")
 _Fragments.mod_uim_exchange_accept_1 = "instruction_INS_makedeal"
 _Fragments.mod_uim_exchange_accept_2 = "instruction_INS_makedeal"
 _Fragments.instruction_INS_makedeal = "@dialogue_end"
