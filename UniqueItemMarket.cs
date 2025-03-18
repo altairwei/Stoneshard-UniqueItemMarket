@@ -25,39 +25,6 @@ public class UniqueItemMarket : Mod
 
     public override void PatchMod()
     {
-        string[] items = {
-            // Weapon
-            "Radiant Sword",        "Jarl Blade",                   "Royal Blade",          "Theurgist Blade",      "Guardsman Broadsword",
-            "Ancient Scimitar",     "Decorated Saber",              "Exquisite Tabar",      "Gilded Axe",           "Baron Axe",
-            "Voivod Mace",          "Decorated Flanged Mace",       "Decorated Warhammer",  "Ceremonial Dagger",    "Ducal Dagger",
-            "Ornate Longsword",     "Blademaster Greatsword",       "Exquisite Twohander",  "Espadon",              "Faceless Spear",
-            /*"Radiant Spear",      "Castellier Spear",*/           "Decorated Voulge",     "Ornate Longaxe",       "Exquisite Grandmace",
-            "Ornate Polehammer",    "Gilded Polehammer",        /*"Ordermarshal Flail",*/   "Decorated Longbow",    "Relict Longbow",
-            "Ornate Crossbow",      /*"Royal Huntmaster Crossbow",*/"Guardsman Crossbow",   /*"Ornate Sling",*/     "Farseer Staff",
-            "Axonian Warstaff",     /*"Mage General Warstaff",      "Stargazer Warstaff",*/ "Hermit Staff",         "Vampiric Staff",
-            "Orient Staff",
-            // Armor & Jewelry
-            "Uroboros Shield",      "Joust Shield",     "Sun Shield",               "Guardian Shield",          "Orient Tower Shield",
-            "Decorated Barbute",    "Luxurious Sallet", "Ceremonial Sentinet",      "Vagabond Knight Sentinet", "Radiant Topfhelm",
-            "Hermit Circlet",       "Hermit Garment",   "Royal Ranger Gambeson",    "Ceremonial Armor",         "Vagabond Knight Armor",
-            /*"Antique Wristbands",*/   "Sardar Boots",     "Engraved Boots",           "Hermit Ring",              "Warding Hand Amulet",
-            "Occult Cloak"
-        };
-
-        foreach (string it in items)
-        {
-            string funcname_1 = "scr_mod_uim_item_exists_" + it.Replace(" ", "_");
-            Msl.AddFunction(
-                name: funcname_1,
-                codeAsString: $"function {funcname_1}() {{ return scr_instance_exists_item(\"{it}\") }}"
-            );
-            string funcname_2 = "scr_mod_uim_check_available_" + it.Replace(" ", "_");
-            Msl.AddFunction(
-                name: funcname_2,
-                codeAsString: $"function {funcname_2}() {{ return ds_list_find_index(scr_atr(\"specialItemsPool\"), \"{it}\") == -1 }}"
-            );
-        }
-
         Msl.AddFunction(ModFiles.GetCode("scr_mod_uim_is_exchange_done.gml"), "scr_mod_uim_is_exchange_done");
         Msl.AddFunction(ModFiles.GetCode("scr_mod_uim_check_available.gml"), "scr_mod_uim_check_available");
         Msl.AddFunction(ModFiles.GetCode("scr_mod_uim_item_exists.gml"), "scr_mod_uim_item_exists");
@@ -71,111 +38,94 @@ public class UniqueItemMarket : Mod
         Msl.AddFunction(ModFiles.GetCode("scr_mod_uim_check_money.gml"), "scr_mod_uim_check_money");
         Msl.AddFunction(ModFiles.GetCode("UpdateFenceDialogData.gml"), "UpdateFenceDialogData");
 
-        /*
-        Msl.LoadAssemblyAsString("gml_GlobalScript_DialogueSystem")
-            .MatchFromUntil("> gml_Script_fragment_eval_embedded_instruction (locals=2, argc=1)", "pushloc.v local._embed_name")
-            .InsertBelow(@"pop.v.v global.mod_uim_current_embed_name
-pushloc.v local._embed_name")
-            .Save();
-        */
+        Localization.DialogLinesPatching();
+        PatchWeaponArmor();
+    }
 
+    private List<string[]> GetEquipTableRange(string start, string end)
+    {
+        List<string> lines = Msl.ThrowIfNull(ModLoader.GetTable("gml_GlobalScript_table_equipment"));
+        int startIndex = lines.FindIndex(item => item.Contains(start));
+        int endIndex = lines.FindIndex(item => item.Contains(end));
+        return lines
+            .Skip(startIndex + 1)
+            .Take(endIndex - startIndex - 1)
+            .Select(x => x.Split(";")).ToList();
+    }
+
+    private void PatchWeaponArmor()
+    {
+        DirectoryInfo dir = new("ModSources/UniqueItemMarket/tmp");
+
+        List<string[]> weapon_name = GetEquipTableRange("weapon_name;weapon_name;", "weapon_name_end;weapon_name_end;");                                        
+        List<string[]> armor_name = GetEquipTableRange("armor_name;armor_name;", "armor_name_end;armor_name_end;");
+
+        List<string> lines = Msl.ThrowIfNull(ModLoader.GetTable("gml_GlobalScript_table_weapons"));
+        List<string> weapons = lines.Select(x => x.Split(';'))
+            .Where(x => x.Length == 80 && x[1] == "5" && x[76] == "unique")
+            .Select(x => x[0])
+            .ToList();
+
+        lines = Msl.ThrowIfNull(ModLoader.GetTable("gml_GlobalScript_table_armor"));
+        List<string> armors = lines.Select(x => x.Split(';'))
+            .Where(x => x.Length == 100 && x[1] == "5" && x[82] == "unique")
+            .Select(x => x[0])
+            .ToList();
+
+        List<string[]> unique_weapon_name = weapon_name
+            .Where(x => weapons.Contains(x[0]))
+            .ToList();
+
+        List<string[]> unique_armor_name = armor_name
+            .Where(x => armors.Contains(x[0]))
+            .ToList();
+
+        // Insert Localization
+
+        List<string> weapon_name_localization = unique_weapon_name
+            .Select(x => string.Format("{0};;;;;;{1}", "mod_uim_" + x[0].Replace(" ", "_"), string.Join(";", x.Skip(1))))
+            .ToList();
+        List<string> armor_name_localization = unique_armor_name
+            .Select(x => string.Format("{0};;;;;;{1}", "mod_uim_" + x[0].Replace(" ", "_"), string.Join(";", x.Skip(1))))
+            .ToList();
+
+        List<string> loc_table = Msl.ThrowIfNull(ModLoader.GetTable("gml_GlobalScript_table_lines"));
+        loc_table.InsertRange(loc_table.FindIndex(x => x.Contains("[NPC] GREETINGS;")), weapon_name_localization);
+        loc_table.InsertRange(loc_table.FindIndex(x => x.Contains("[NPC] GREETINGS;")), weapon_name_localization.Select(x => x.Replace("mod_uim_", "mod_uim_target_")));
+        loc_table.InsertRange(loc_table.FindIndex(x => x.Contains("[NPC] GREETINGS;")), armor_name_localization);
+        loc_table.InsertRange(loc_table.FindIndex(x => x.Contains("[NPC] GREETINGS;")), armor_name_localization.Select(x => x.Replace("mod_uim_", "mod_uim_target_")));
+        ModLoader.SetTable(loc_table, "gml_GlobalScript_table_lines");
+
+        // Insert GML codes
         UndertaleGameObject ob = Msl.AddObject("unique_item_market_initializer", isPersistent: true);
-        Msl.AddNewEvent(ob, ModFiles.GetCode("UpdateFenceDialogData.gml"), EventType.Create, 0);
-        // initializer in START room
+        Msl.AddNewEvent(ob, "", EventType.Create, 0);
         UndertaleRoom room = Msl.GetRoom("START");
         room.AddGameObject("Instances", ob);
 
-        Localization.DialogLinesPatching();
-
-        // FIXME
-        // DebugPatching();
-    }
-
-    private static void ExportTable(string table)
-    {
-        DirectoryInfo dir = new("ModSources/UniqueItemMarket/tmp");
-        if (!dir.Exists) dir.Create();
-        List<string>? lines = ModLoader.GetTable(table);
-        if (lines != null)
+        string codes = ModFiles.GetCode("UpdateFenceDialogData.gml");
+        List<string> items = weapons.Concat(armors).ToList();
+        foreach (string itm in items)
         {
-            File.WriteAllLines(
-                Path.Join(dir.FullName, Path.DirectorySeparatorChar.ToString(), table + ".tsv"),
-                lines.Select(x => string.Join('\t', x.Split(';')))
-            );
+            string key = itm.Replace(" ", "_");
+            codes += @$"
+array_push(_Fragments.mod_uim_exchange, ""mod_uim_{key}"")
+variable_struct_set(_Fragments, ""mod_uim_{key}"", ""instruction_INS_giveItem"")
+variable_struct_set(_Scripts, ""embedded_mod_uim_{key}"", function () {{ return scr_instance_exists_item(""{itm}"") }})
+
+array_push(_Fragments.mod_uim_exchange_target, ""mod_uim_target_{key}"")
+variable_struct_set(_Fragments, ""mod_uim_target_{key}"", ""instruction_INS_exchangeItem"")
+variable_struct_set(_Scripts, ""embedded_mod_uim_target_{key}"", function () {{ return ds_list_find_index(scr_atr(""specialItemsPool""), ""{itm}"") == -1 }})
+            ";
         }
-    }
 
-    private void DebugPatching()
-    {
-        Msl.LoadGML("gml_GlobalScript_debug_print")
-            .MatchFromUntil("function debug_print()", "{")
-            .InsertBelow(@"
-    var _str = ""debug_print: "";
-    for (var i = 0; i < argument_count; i ++)
-    {
-        _str += "" "" + string(argument[i]);
-    }
-    scr_msl_log(_str)")
-            .Save();
+        codes += @"
+array_push(_Fragments.mod_uim_exchange, ""mod_uim_cancel_1"")
+array_push(_Fragments.mod_uim_exchange_target, ""mod_uim_cancel_2"")
+";
 
-        Msl.LoadAssemblyAsString("gml_GlobalScript_neoconsole_api")
-            .MatchFromUntil("> gml_Script_print (locals=3, argc=0)", ":[145]")
-            .InsertBelow(@"push.s ""print: ""@121330
-pop.v.s local._str
-pushi.e 0
-pop.v.i local.i
-
-:[1002]
-pushloc.v local.i
-pushbltn.v builtin.argument_count
-cmp.v.v LT
-bf [1004]
-
-:[1003]
-push.v local._str
-push.s "" ""@2874
-pushi.e -15
-pushloc.v local.i
-conv.v.i
-push.v [array]self.argument
-call.i string(argc=1)
-add.v.s
-add.v.v
-pop.v.v local._str
-push.v local.i
-push.e 1
-add.i.v
-pop.v.v local.i
-b [1002]
-
-:[1004]
-pushloc.v local._str
-call.i gml_Script_scr_msl_log(argc=1)
-popz.v")
-            .Save();
-
-
-        Msl.LoadAssemblyAsString("gml_Object_o_console_controller_Draw_64")
-            .MatchFromUntil(":[0]", "exit.i")
-            .ReplaceBy("")
-            .Save();
-        
-        // Msl.LoadAssemblyAsString("gml_GlobalScript_neoconsole_api")
-        //     .MatchFrom("pop.v.b global.consoleEnabled")
-        //     .InsertAbove("pushi.e 1")
-        //     .Save();
-
-        // Msl.LoadAssemblyAsString("gml_Object_o_dataLoader_Other_10")
-        //     .MatchFrom("pop.v.b global.consoleEnabled")
-        //     .InsertAbove("pushi.e 1")
-        //     .Save();
-
-        Msl.LoadGML("gml_Object_o_console_controller_KeyRelease_113")
+        Msl.LoadGML(Msl.EventName("unique_item_market_initializer", EventType.Create, 0))
             .MatchAll()
-            .InsertBelow(@"
-                global.consoleEnabled = !global.consoleEnabled
-                if (global.consoleEnabled)
-                    event_perform(ev_draw, ev_gui)")
+            .InsertBelow(codes)
             .Save();
     }
 }
