@@ -20,7 +20,7 @@ public class UniqueItemMarket : Mod
     public override string Author => "Altair";
     public override string Name => "Unique Item Market";
     public override string Description => "You can entrust your precious unique weaponry to Skinflint Homs in exchange for other weaponry from bandits, occultists, or mercenaries.";
-    public override string Version => "1.0.0";
+    public override string Version => "1.1.0";
     public override string TargetVersion => "0.8.2.10";
 
     public override void PatchMod()
@@ -57,7 +57,7 @@ public class UniqueItemMarket : Mod
     {
         DirectoryInfo dir = new("ModSources/UniqueItemMarket/tmp");
 
-        List<string[]> weapon_name = GetEquipTableRange("weapon_name;weapon_name;", "weapon_name_end;weapon_name_end;");                                        
+        List<string[]> weapon_name = GetEquipTableRange("weapon_name;weapon_name;", "weapon_name_end;weapon_name_end;");
         List<string[]> armor_name = GetEquipTableRange("armor_name;armor_name;", "armor_name_end;armor_name_end;");
 
         List<string> lines = Msl.ThrowIfNull(ModLoader.GetTable("gml_GlobalScript_table_weapons"));
