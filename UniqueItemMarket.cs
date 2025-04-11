@@ -62,13 +62,13 @@ public class UniqueItemMarket : Mod
 
         List<string> lines = Msl.ThrowIfNull(ModLoader.GetTable("gml_GlobalScript_table_weapons"));
         List<string> weapons = lines.Select(x => x.Split(';'))
-            .Where(x => x.Length == 80 && x[1] == "5" && x[76] == "unique")
+            .Where(x => x.Length == 80 && x[1] == "5" && (x[76] == "unique" || x[76] == "special"))
             .Select(x => x[0])
             .ToList();
 
         lines = Msl.ThrowIfNull(ModLoader.GetTable("gml_GlobalScript_table_armor"));
         List<string> armors = lines.Select(x => x.Split(';'))
-            .Where(x => x.Length == 100 && x[1] == "5" && x[82] == "unique")
+            .Where(x => x.Length == 100 && x[1] == "5" && (x[82] == "unique" || x[82] == "special"))
             .Select(x => x[0])
             .ToList();
 
