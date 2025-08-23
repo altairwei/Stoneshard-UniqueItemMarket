@@ -1,6 +1,6 @@
-var _Fragments = variable_struct_get(global.DialogueData_val.npc_fence, "Fragments")
-var _Scripts = variable_struct_get(global.DialogueData_val.npc_fence, "Scripts")
-var _Specs = variable_struct_get(global.DialogueData_val.npc_fence, "Specs")
+var _Fragments = variable_struct_get(global.__dialogue_flow_data.npc_fence, "Fragments")
+var _Scripts = variable_struct_get(global.__dialogue_flow_data.npc_fence, "Scripts")
+var _Specs = variable_struct_get(global.__dialogue_flow_data.npc_fence, "Specs")
 
 array_insert(_Fragments.hub, array_length(_Fragments.hub) - 1, "mod_uim_exchange_pc")
 _Fragments.mod_uim_exchange_pc = "mod_uim_exchange"

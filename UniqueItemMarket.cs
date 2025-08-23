@@ -20,8 +20,8 @@ public class UniqueItemMarket : Mod
     public override string Author => "Altair";
     public override string Name => "Unique Item Market";
     public override string Description => "You can entrust your precious unique weaponry to Skinflint Homs in exchange for other weaponry from bandits, occultists, or mercenaries.";
-    public override string Version => "1.1.0";
-    public override string TargetVersion => "0.8.2.10";
+    public override string Version => "1.1.1";
+    public override string TargetVersion => "0.9.3.5";
 
     public override void PatchMod()
     {
@@ -98,7 +98,7 @@ public class UniqueItemMarket : Mod
 
         // Insert GML codes
         UndertaleGameObject ob = Msl.AddObject("unique_item_market_initializer", isPersistent: true);
-        Msl.AddNewEvent(ob, "", EventType.Create, 0);
+        Msl.AddNewEvent(ob, "", EventType.Other, 10);
         UndertaleRoom room = Msl.GetRoom("START");
         room.AddGameObject("Instances", ob);
 
@@ -123,9 +123,13 @@ array_push(_Fragments.mod_uim_exchange, ""mod_uim_cancel_1"")
 array_push(_Fragments.mod_uim_exchange_target, ""mod_uim_cancel_2"")
 ";
 
-        Msl.LoadGML(Msl.EventName("unique_item_market_initializer", EventType.Create, 0))
+        Msl.LoadGML(Msl.EventName("unique_item_market_initializer", EventType.Other, 10))
             .MatchAll()
             .InsertBelow(codes)
+            .Save();
+        Msl.LoadGML("gml_Object_o_dataLoader_Other_10")
+            .MatchFrom("scr_dialogue_loader_init")
+            .InsertBelow("with (unique_item_market_initializer) { event_user(0) }")
             .Save();
     }
 }
