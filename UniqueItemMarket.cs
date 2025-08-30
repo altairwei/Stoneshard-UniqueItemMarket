@@ -20,7 +20,7 @@ public class UniqueItemMarket : Mod
     public override string Author => "Altair";
     public override string Name => "Unique Item Market";
     public override string Description => "You can entrust your precious unique weaponry to Skinflint Homs in exchange for other weaponry from bandits, occultists, or mercenaries.";
-    public override string Version => "1.1.1";
+    public override string Version => "1.1.2";
     public override string TargetVersion => "0.9.3.5";
 
     public override void PatchMod()
